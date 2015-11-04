@@ -113,7 +113,7 @@ public class ArrayListPractice {
     {
         // display the header
         System.out.println("name\t\tage\t\tcolour");
-        System.out.println("---------------------------");
+        System.out.println("--------------------------------------");
         
         // print out each person's info
         for (Person p : people) {
