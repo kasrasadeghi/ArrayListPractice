@@ -7,12 +7,12 @@
 package arraylistpractice;
 
 import apcscvm.CVMProgram;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -24,10 +24,10 @@ public class ArrayListPractice {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        infiniteFamilyInfo();
-        //infiniteFamilyInfo( "FamilyInfoInputData.txt" );
-        //launchPolygonViewer1();
-        //launchPolygonViewer();
+//        infiniteFamilyInfo();
+        infiniteFamilyInfo( "FamilyInfoInputData.txt" );
+//        launchPolygonViewer1();
+//        launchPolygonViewer();
     }
     
     public static void infiniteFamilyInfo( String fileName )
@@ -54,22 +54,25 @@ public class ArrayListPractice {
         // create a list to hold the people
         ArrayList<Person> people = new ArrayList<>();
         
-        int personCounter = 1;
+        int personCounter = 0;
         while ( !done )
         {
             // read information for the next person
-            System.out.printf("Enter person %d's name \n", personCounter);
-            String name = sc.nextLine();
+            System.out.printf("Enter person %d's name \n", ++personCounter);
+            String name = sc.next();
             
             
-            System.out.printf("Enter %s's age", name);
+            System.out.printf("Enter %s's age\n", name);
             int age = sc.nextInt();
             
-            System.out.printf("Enter %s's favourite colour");
+            System.out.printf("Enter %s's favourite colour\n", name);
+            String colour = sc.next();
             // add a new person to the list
-        
+            people.add(new Person(name,age,colour));
             // prompt to see if the user is done
-            done = true;
+            System.out.println("Are you done? Y/N");
+            if (sc.next().toLowerCase().equals("y"))
+                done = true;
         }
         
         System.out.println("");
@@ -109,37 +112,44 @@ public class ArrayListPractice {
     public static void printInfoTable( ArrayList<Person> people )
     {
         // display the header
+        System.out.println("name\t\tage\t\tcolour");
+        System.out.println("---------------------------");
         
         // print out each person's info
-        
+        for (Person p : people) {
+            System.out.printf("%s\t\t%d\t\t%s\n", p.getName(), p.getAge(), p.getColor());
+        }
     }
     
     // getAverageAge
     // calculates the average age of the people in a list of Person
     public static double getAverageAge( ArrayList<Person> people )
     {
-        return 0;
+        return (people.stream().mapToDouble(p -> p.getDAge()).sum())
+                /people.size();
     }
     
     // getNames
     // gets a list of the names (Strings) of the people in a list of Person
     public static ArrayList<String> getNames( ArrayList<Person> people )
     {
-        return null;
+        return people.stream().map(p -> p.getName())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
     
     // getFavoriteColors
     // gets a list of the favorite colors of the people in a list of Person
     public static ArrayList<String> getFavoriteColors( ArrayList<Person> people )
     {
-        return null;
+        return people.stream().map(p -> p.getColor())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
     
     // haveBirthdays
     // consumes a list of Person and causes each person to have a birthday
     public static void haveBirthdays( ArrayList<Person> people )
     {
-        
+        people.stream().forEach(p -> p.incAge());
     }
 
     // filterFavoriteColorGreen
@@ -148,13 +158,17 @@ public class ArrayListPractice {
     // that people with "Green" "GREEN" "gReEn" etc are included in the returned list)
     public static ArrayList<Person> filterFavoriteColorGreen(ArrayList<Person> people) 
     {
-        return null;
+        return people
+                .stream()
+                .filter(p -> p.getColor().toLowerCase().equals("green"))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     // killOverThirties
     // removes all the people over the age of 30 from the list
     public static void killOverThirties(ArrayList<Person> people) 
     {
+        people.removeIf(p -> p.getAge() > 30);
     }
 
     // getFavoriteColorsWithoutDuplicates
@@ -162,7 +176,13 @@ public class ArrayListPractice {
     // Note:  "Green" and "green" are duplicates (ignore case when checking for duplicates)
     public static ArrayList<String> getFavoriteColorsWithoutDuplicates( ArrayList<Person> people )
     {
-        return getFavoriteColors( people );
+        ArrayList<String> colours = getFavoriteColors(people).stream()
+                .map(c -> c.toLowerCase())
+                .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<String> deduped = new ArrayList<>();
+        colours.stream().filter(c -> (!deduped.contains(c)))
+                .forEach(c -> deduped.add(c));
+        return deduped;
     }
     
     public static void launchPolygonViewer()

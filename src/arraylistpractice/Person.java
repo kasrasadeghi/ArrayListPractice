@@ -29,6 +29,7 @@ public class Person
     
     public String getName() { return name; }
     public int getAge() { return age; }
+    public double getDAge() { return (double) age; }
     public String getColor() { return colour; }
     
     public void incAge() { ++age; }
