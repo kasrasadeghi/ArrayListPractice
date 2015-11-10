@@ -112,7 +112,7 @@ public class ArrayListPractice {
     public static void printInfoTable( ArrayList<Person> people )
     {
         // display the header
-        System.out.println("name\t\tage\t\tcolour");
+        System.out.println("name\t\tage\t\tcolor");
         System.out.println("--------------------------------------");
         
         // print out each person's info
